@@ -18,20 +18,32 @@
 #
 # Environment:
 #   OUT              output directory                    (default: <repo>/out)
-#   KERNEL_INCLUDE   kernel include/ with dt-bindings/   (default: ../sm8650/include)
+#   KERNEL_INCLUDE   kernel include/ with dt-bindings/   (default: the first of ../sm8650/include
+#                    (branch lineage-24.0-clo-v1) and the Lenovo GPL kernel include/ that has
+#                    dt-bindings/clock/qcom,camcc-pineapple.h)
 #   MODULES          sm8650-modules qcom/opensource      (default: ../sm8650-modules/qcom/opensource)
+#   ANDROID_BUILD_TOP  Android tree with system/libufdt/utils/src/mkdtboimg.py (the AOSP
+#                    tool; or set MKDTBOIMG to a command with its 'create' syntax)
 #   CPP DTC FDTOVERLAY MKDTBOIMG   host tools
 set -eu
 
 HERE=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 TOP=$(cd "$HERE/../.." && pwd)
 OUT=${OUT:-$TOP/out}
-KERNEL_INCLUDE=${KERNEL_INCLUDE:-$TOP/../sm8650/include}
+if [ -z "${KERNEL_INCLUDE:-}" ]; then
+	for KERNEL_INCLUDE in "$TOP/../sm8650/include" \
+		"$TOP/../../../gpl-16.1.02.078/kernel-src/kernel/include"; do
+		[ -e "$KERNEL_INCLUDE/dt-bindings/clock/qcom,camcc-pineapple.h" ] && break
+		KERNEL_INCLUDE=
+	done
+fi
+[ -e "${KERNEL_INCLUDE:-}/dt-bindings/clock/qcom,camcc-pineapple.h" ] || {
+	echo "KERNEL_INCLUDE: no include/ with dt-bindings/clock/qcom,camcc-pineapple.h" >&2; exit 1; }
 MODULES=${MODULES:-$TOP/../sm8650-modules/qcom/opensource}
 CPP=${CPP:-cpp}
 DTC=${DTC:-dtc}
 FDTOVERLAY=${FDTOVERLAY:-fdtoverlay}
-MKDTBOIMG=${MKDTBOIMG:-mkdtboimg}
+MKDTBOIMG=${MKDTBOIMG:-python3 ${ANDROID_BUILD_TOP:?set ANDROID_BUILD_TOP or MKDTBOIMG}/system/libufdt/utils/src/mkdtboimg.py}
 QCOM=$TOP/qcom
 
 INCLUDES=(-I "$QCOM" -I "$KERNEL_INCLUDE"
@@ -46,6 +58,25 @@ compile() {
 	$CPP -nostdinc -undef -D__DTS__ -x assembler-with-cpp "${INCLUDES[@]}" -I "$dir" \
 		-o "$dst.pp" "$src"
 	$DTC -q -@ -I dts -O dtb -b 0 -i "$dir" -i "$QCOM" -o "$dst" "$dst.pp"
+	rm -f "$dst.pp"
+}
+
+# several overlay sources in one dtc run: labels shared between them are
+# resolved inside the overlay (as Qualcomm's merged board dtbo entries are);
+# the last source supplies the root properties (model/compatible/ids)
+compile_merged() {
+	local dst=$1 s dir; shift
+	mkdir -p "$(dirname "$dst")"
+	{
+		echo '/dts-v1/;'
+		echo '/plugin/;'
+		for s in "$@"; do
+			dir=$(dirname "$QCOM/$s")
+			$CPP -nostdinc -undef -D__DTS__ -x assembler-with-cpp "${INCLUDES[@]}" -I "$dir" "$QCOM/$s" |
+				{ grep -v '^/dts-v1/;$\|^/plugin/;$' || true; }
+		done
+	} > "$dst.pp"
+	$DTC -q -@ -I dts -O dtb -b 0 -i "$QCOM" -o "$dst" "$dst.pp"
 	rm -f "$dst.pp"
 }
 
@@ -74,7 +105,11 @@ build_dtbo() {
 	mkdir -p "$OUT/dtbo"
 	local idx src imgs=()
 	while read -r idx src; do
-		compile "$src" "$OUT/dtbo/$idx.dtbo"
+		if [ "$(echo $src | wc -w)" -eq 1 ]; then
+			compile "$src" "$OUT/dtbo/$idx.dtbo"
+		else
+			compile_merged "$OUT/dtbo/$idx.dtbo" $src
+		fi
 		imgs+=("$OUT/dtbo/$idx.dtbo")
 		echo "dtbo $idx $src"
 	done < <(grep -v '^[[:space:]]*\(#\|$\)' "$HERE/../dtbo.list" | sort -n)
