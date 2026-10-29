@@ -1,0 +1,93 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * (C) 2026 The LineageOS Project
+ *
+ * lapis: keyboard-hall
+ * Reconstructed from the Lenovo TB520FU stock dtbo (ZUI 18.5.10.037).
+ */
+
+&soc {
+
+	lenovo_kb {
+		compatible = "lenovo,lenovo_keyboard";
+		uart-tx-gpios = <&tlmm 0xa 0x0>;
+		uart-rx-gpios = <&tlmm 0xb 0x0>;
+		power-en-gpios = <&tlmm 0xad 0x0>;
+		plug-gpios = <&tlmm 0xc6 0x0>;
+		uart-wake-gpios = <&tlmm 0xab 0x0>;
+		tx-en-gpios = <&tlmm 0x77 0x0>;
+		pupd-gpios = <&tlmm 0xb4 0x0>;
+		lid-gpios = <&tlmm 0xc8 0x0>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&keyboard_gpio &wake_int &hall_int>;
+		status = "ok";
+	};
+};
+
+&tlmm {
+
+	keyboard {
+
+		keyboard_gpio: keyboard {
+
+			mux {
+				pins = "gpio173";
+				function = "gpio";
+			};
+
+			config {
+				pins = "gpio173";
+				drive-strength = <0x2>;
+				bias-disable;
+			};
+		};
+
+		wake_int: wakeup {
+
+			mux {
+				pins = "gpio171";
+				function = "gpio";
+			};
+
+			config {
+				pins = "gpio171";
+				drive-strength = <0x2>;
+				bias-disable;
+			};
+		};
+
+		hall_int: hall {
+
+			mux {
+				pins = "gpio198";
+				function = "gpio";
+			};
+
+			config {
+				pins = "gpio198";
+				drive-strength = <0x2>;
+				bias-disable;
+			};
+		};
+	};
+};
+
+&soc {
+	#address-cells = <0x1>;
+	#size-cells = <0x1>;
+	status = "okay";
+
+	hall_detect@0 {
+		compatible = "qcom,hall_detect";
+		status = "okay";
+		hall,gpio_irq1 = <&tlmm 0xb1 0x0>;
+		hall,gpio_irq2 = <&tlmm 0xb6 0x0>;
+	};
+};
+
+&soc {
+
+	lenovo_kb {
+		panel = <&dsi_panel_lapis_tianma_nt36532_dsc_3k_video &dsi_panel_lapis_boe_nt36532_dsc_3k_video>;
+	};
+};

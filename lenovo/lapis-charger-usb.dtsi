@@ -1,0 +1,307 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * (C) 2026 The LineageOS Project
+ *
+ * lapis: charger-usb
+ * Reconstructed from the Lenovo TB520FU stock dtbo (ZUI 18.5.10.037).
+ */
+
+&pmic_glink_debug {
+
+	i2c@107 {
+		reg = <0x107>;
+		#address-cells = <0x1>;
+		#size-cells = <0x0>;
+		qcom,bus-type = "i2c";
+
+		qcom,smb1396@34 {
+			compatible = "qcom,i2c-pmic";
+			reg = <0x34>;
+			qcom,can-sleep;
+		};
+
+		qcom,smb1396@35 {
+			compatible = "qcom,i2c-pmic";
+			reg = <0x35>;
+			qcom,can-sleep;
+		};
+
+		qcom,idt9418@3b {
+			compatible = "qcom,i2c-pmic";
+			reg = <0x3b>;
+			qcom,can-sleep;
+		};
+	};
+
+	spmi@200 {
+		reg = <0x200>;
+		#address-cells = <0x2>;
+		#size-cells = <0x0>;
+		qcom,bus-type = "spmi";
+
+		qcom,smb1510@d {
+			compatible = "qcom,spmi-pmic";
+			reg = <0xd 0x0>;
+			qcom,can-sleep;
+		};
+	};
+};
+
+&pmic_glink_adc {
+	status = "ok";
+
+	smb1396_1_iin {
+		reg = <0x1073401>;
+		label = "smb1396_1_iin";
+	};
+
+	smb1396_1_ichg {
+		reg = <0x1073402>;
+		label = "smb1396_1_ichg";
+	};
+
+	smb1396_1_die_temp {
+		reg = <0x1073403>;
+		label = "smb1396_1_die_temp";
+	};
+
+	smb1396_2_iin {
+		reg = <0x1073501>;
+		label = "smb1396_2_iin";
+	};
+
+	smb1396_2_ichg {
+		reg = <0x1073502>;
+		label = "smb1396_2_ichg";
+	};
+
+	smb1396_2_die_temp {
+		reg = <0x1073503>;
+		label = "smb1396_2_die_temp";
+	};
+};
+
+&battery_charger {
+	qcom,wireless-fw-name = "idt9418.bin";
+	qcom,thermal-mitigation-step = <0x7a120>;
+	#cooling-cells = <0x2>;
+};
+
+&eusb2_phy0 {
+	dummy-supply = <&pm8550b_eusb2_repeater>;
+	usb-repeater = <&pm8550b_eusb2_repeater>;
+};
+
+&usb0 {
+	usb-role-switch;
+
+	dwc3@a600000 {
+		usb-role-switch;
+	};
+};
+
+&qupv3_se6_i2c {
+	status = "ok";
+	#address-cells = <0x1>;
+	#size-cells = <0x0>;
+
+	redriver: redriver@1c {
+		status = "disabled";
+		compatible = "onnn,redriver";
+		reg = <0x1c>;
+		vdd-supply = <&L15B>;
+		lane-channel-swap;
+		eq = <0x4060604 0x5070705>;
+		flat-gain = <0x3030303 0x30300>;
+		output-comp = <0x3030303 0x3030303>;
+		loss-match = <0x1030301 0x2020202>;
+	};
+};
+
+&usb_qmp_dp_phy {
+	pinctrl-names = "unused";
+};
+
+&usb0 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&usb3phy_portselect_gpio>;
+	gpios = <&tlmm 0x1d 0x0>;
+	ssusb_redriver = <&redriver>;
+};
+
+&wcd_usbss {
+	interrupt-parent = <&spmi_bus>;
+	interrupts = <0x0 0xb6 0x1 0x3>;
+	interrupt-names = "usb_wcd";
+	nvmem-cells = <&usb_mode>;
+	nvmem-cell-names = "usb_mode";
+};
+
+&qupv3_se6_i2c {
+
+	redriver_ps5169: redriver_ps5169@30 {
+		status = "ok";
+		compatible = "hq_redriver,ps5169";
+		reg = <0x30>;
+	};
+};
+
+&usb0 {
+	qcom,wcd_usbss = <&wcd_usbss>;
+	ssusb_redriver = <&redriver_ps5169>;
+
+	port {
+
+		usb_port0: endpoint {
+			remote-endpoint = <&usb_port0_connector>;
+		};
+	};
+};
+
+&ucsi {
+
+	connector {
+
+		port {
+
+			usb_port0_connector: endpoint {
+				remote-endpoint = <&usb_port0>;
+			};
+		};
+	};
+};
+
+&thermal_zones {
+
+	usb-conn-therm {
+		polling-delay-passive = <0x0>;
+		polling-delay = <0x0>;
+		thermal-sensors = <&pmk8550_vadc 0x147>;
+
+		trips {
+
+			active-config0 {
+				temperature = <0x1e848>;
+				hysteresis = <0x3e8>;
+				type = "passive";
+			};
+
+			active-config1 {
+				temperature = <0x1e848>;
+				hysteresis = <0x3e8>;
+				type = "passive";
+			};
+		};
+	};
+
+	fast-chg-therm {
+		polling-delay-passive = <0x0>;
+		polling-delay = <0x0>;
+		thermal-sensors = <&pmk8550_vadc 0x14d>;
+
+		trips {
+
+			active-config0 {
+				temperature = <0x1e848>;
+				hysteresis = <0x3e8>;
+				type = "passive";
+			};
+
+			active-config1 {
+				temperature = <0x1e848>;
+				hysteresis = <0x3e8>;
+				type = "passive";
+			};
+		};
+	};
+
+	back-chg-therm {
+		polling-delay-passive = <0x0>;
+		polling-delay = <0x0>;
+		thermal-sensors = <&pmk8550_vadc 0x14a>;
+
+		trips {
+
+			active-config0 {
+				temperature = <0x1e848>;
+				hysteresis = <0x3e8>;
+				type = "passive";
+			};
+
+			active-config1 {
+				temperature = <0x1e848>;
+				hysteresis = <0x3e8>;
+				type = "passive";
+			};
+		};
+	};
+
+	top-chg-therm {
+		polling-delay-passive = <0x0>;
+		polling-delay = <0x0>;
+		thermal-sensors = <&pmk8550_vadc 0x749>;
+
+		trips {
+
+			active-config0 {
+				temperature = <0x1e848>;
+				hysteresis = <0x3e8>;
+				type = "passive";
+			};
+
+			active-config1 {
+				temperature = <0x1e848>;
+				hysteresis = <0x3e8>;
+				type = "passive";
+			};
+		};
+	};
+
+	batt1-therm {
+		polling-delay-passive = <0x0>;
+		polling-delay = <0x0>;
+		thermal-sensors = <&pmk8550_vadc 0x744>;
+
+		trips {
+
+			active-config0 {
+				temperature = <0x1e848>;
+				hysteresis = <0x3e8>;
+				type = "passive";
+			};
+
+			active-config1 {
+				temperature = <0x1e848>;
+				hysteresis = <0x3e8>;
+				type = "passive";
+			};
+		};
+	};
+
+	usb1-conn-therm {
+		polling-delay-passive = <0x0>;
+		polling-delay = <0x0>;
+		thermal-sensors = <&pmk8550_vadc 0x747>;
+
+		trips {
+
+			active-config0 {
+				temperature = <0x1e848>;
+				hysteresis = <0x3e8>;
+				type = "passive";
+			};
+
+			active-config1 {
+				temperature = <0x1e848>;
+				hysteresis = <0x3e8>;
+				type = "passive";
+			};
+		};
+	};
+};
+
+&battery_charger {
+	qcom,wireless-fw-name = "idt9418.bin";
+	qcom,thermal-mitigation = <0xb40dc0 0xa037a0 0x989680 0x90f560 0x895440 0x81b320 0x7a1200 0x6acfc0 0x5b8d80 0x2dc6c0 0x1e8480 0x7a120>;
+	#cooling-cells = <0x2>;
+};

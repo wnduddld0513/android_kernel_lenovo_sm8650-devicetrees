@@ -1,0 +1,30 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * (C) 2026 The LineageOS Project
+ *
+ * Lenovo Yoga Tab Plus (TB520FU, lapis) board overlay, board-id 0x2000b.
+ * Replaces the Qualcomm Pineapple QRD overlay set; msm-id/board-id below
+ * select it on SM8650 (0x22d) and SM8650P (0x241), v1 and v2.
+ */
+
+/dts-v1/;
+/plugin/;
+
+/ {
+	model = "Qualcomm Technologies, Inc. Lapis QRD";
+	compatible = "qcom,lapis-qrd", "qcom,lapis", "qcom,qrd";
+	qcom,msm-id = <0x22d 0x20000 0x22d 0x10000 0x241 0x20000 0x241 0x10000>;
+	qcom,board-id = <0x2000b 0x0>;
+};
+
+#include "lapis-board.dtsi"
+#include "lapis-charger-usb.dtsi"
+#include "lapis-panel-touch.dtsi"
+#include "lapis-thermal.dtsi"
+#include "lapis-keyboard-hall.dtsi"
+#include "lapis-wlan.dtsi"
+#include "../qcom/nfc/nxp/pineapple-nfc-common.dtsi"
+#include "lapis-camera.dtsi"
+#include "lapis-audio.dtsi"
+#include "lapis-display.dtsi"
+#include "../qcom/mm/hw_fence/pineapple-hw-fence.dtsi"

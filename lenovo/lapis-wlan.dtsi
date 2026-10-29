@@ -1,0 +1,241 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * (C) 2026 The LineageOS Project
+ *
+ * lapis: wlan
+ * Reconstructed from the Lenovo TB520FU stock dtbo (ZUI 18.5.10.037).
+ */
+
+&tlmm {
+
+	cnss_pins {
+
+		tb_l44: cnss_wlan_en_active {
+
+			mux {
+				function = "gpio";
+				pins = "gpio16";
+			};
+
+			config {
+				bias-pull-up;
+				output-high;
+				drive-strength = <0x10>;
+				pins = "gpio16";
+			};
+		};
+
+		tb_l45: cnss_wlan_en_sleep {
+
+			mux {
+				function = "gpio";
+				pins = "gpio16";
+			};
+
+			config {
+				bias-pull-down;
+				output-low;
+				drive-strength = <0x2>;
+				pins = "gpio16";
+			};
+		};
+	};
+};
+
+&reserved_memory {
+
+	tb_l46: cnss_wlan_region {
+		size = <0x0 0x2000000>;
+		alignment = <0x0 0x400000>;
+		reusable;
+		alloc-ranges = <0x0 0x0 0x0 0xffffffff>;
+		compatible = "shared-dma-pool";
+	};
+};
+
+&soc {
+
+	qcom,cnss-kiwi@b0000000 {
+		qcom,pdc_init_table = "{class: wlan_pdc, ss: rf, res: s3c.v, upval: 916}", "{class: wlan_pdc, ss: rf, res: s3c.v, dwnval: 612}", "{class: wlan_pdc, ss: rf, res: s1c.v, upval: 1316}", "{class: wlan_pdc, ss: rf, res: s1c.v, dwnval: 944}", "{class: wlan_pdc, ss: rf, res: s6c.v, upval: 1864}", "{class: wlan_pdc, ss: rf, res: s6c.v, dwnval: 1820}", "{class: wlan_pdc, ss: bb, res: s2c.v, upval: 976}", "{class: wlan_pdc, ss: bb, res: s2c.v, dwnval: 512}", "{class: wlan_pdc, ss: bb, res: s4i.v, upval: 940}", "{class: wlan_pdc, ss: bb, res: s4i.v, dwnval: 420}";
+		qcom,pmu_vreg_map = "VDD095_MX_PMU", "s2c", "VDD095_PMU", "s4i", "VDD_PMU_AON_I", "s3c", "VDD095_PMU_BT", "s3c", "VDD09_PMU_RFA_I", "s3c", "VDD13_PMU_PCIE_I", "s1c", "VDD13_PMU_RFA_I", "s1c", "VDD19_PMU_PCIE_I", "s6c", "VDD19_PMU_RFA_I", "s6c";
+		qcom,vreg_pdc_map = "s3c", "rf", "l15B", "rf", "l3c", "rf", "s1c", "rf", "s6c", "rf", "s2c", "bb", "s4i", "bb";
+		qcom,bus-bw-cfg = <0x0 0x0 0x8ca 0x186a00 0x1d4c 0x186a00 0x7530 0x186a00 0x186a0 0x186a00 0x2ab98 0x626380 0x4c4b4 0x626380 0x8f6ec 0x822080 0x1d4c 0x30d400 0x0 0x0 0x8ca 0x216600 0x1d4c 0x216600 0x7530 0x216600 0x186a0 0x216600 0x2ab98 0x5eec00 0x4c4b4 0x7faf80 0x8f6ec 0xc35000 0x1d4c 0x216600>;
+		qcom,bus-bw-cfg-count = <0x9>;
+		qcom,icc-path-count = <0x2>;
+		interconnect-names = "pcie_to_memnoc", "memnoc_to_ddr";
+		interconnects = <&pcie_noc 0x2f &pcie_noc 0x239 &gem_noc 0x1b &mc_virt 0x200>;
+		qcom,vdd-wlan-rfa2-config = <0x1414a0 0x1414a0 0x0 0x0 0x1>;
+		vdd-wlan-rfa2-supply = <&S1C>;
+		qcom,vdd-wlan-rfa1-config = <0x1c5200 0x1c7140 0x0 0x0 0x1>;
+		vdd-wlan-rfa1-supply = <&S6C>;
+		qcom,vdd-wlan-dig-config = <0xdfa20 0xdfa20 0x0 0x0 0x1>;
+		vdd-wlan-dig-supply = <&S3C>;
+		qcom,vdd-wlan-aon-config = <0xee480 0xee480 0x0 0x0 0x1>;
+		vdd-wlan-aon-supply = <&S2C>;
+		qcom,vdd-wlan-config = <0xe57e0 0xe57e0 0x0 0x0 0x1>;
+		vdd-wlan-supply = <&S4I>;
+		qcom,vdd-wlan-io12-config = <0x124f80 0x124f80 0x0 0x0 0x1>;
+		vdd-wlan-io12-supply = <&L3C>;
+		qcom,vdd-wlan-io-config = <0x1b7740 0x1b7740 0x0 0x0 0x1>;
+		vdd-wlan-io-supply = <&L15B>;
+		qcom,qmp = <&aoss_qmp>;
+		qcom,same-dt-multi-dev;
+		use-pm-domain;
+		cnss-enable-self-recovery;
+		qcom,wlan-cbc-enabled;
+		qcom,wlan-ramdump-dynamic = <0x780000>;
+		qcom,wlan-rc-num = <0x0>;
+		qcom,wlan;
+		pinctrl-1 = <&tb_l45>;
+		pinctrl-0 = <&tb_l44>;
+		pinctrl-names = "wlan_en_active", "wlan_en_sleep";
+		mpm_wake_set_gpios = <0x12 0x13>;
+		qcom,sw-ctrl-gpio = <&tlmm 0x12 0x0>;
+		qcom,bt-en-gpio = <&tlmm 0x11 0x0>;
+		wlan-en-gpio = <&tlmm 0x10 0x0>;
+		supported-ids = <0x1107>;
+		qcom,wlan-sw-ctrl-gpio = <&tlmm 0x13 0x0>;
+		reg-names = "smmu_iova_ipa";
+		reg = <0xb0000000 0x10000>;
+		compatible = "qcom,cnss-kiwi";
+	};
+};
+
+&pcie0_rp {
+	#size-cells = <0x0>;
+	#address-cells = <0x5>;
+
+	cnss_pci0 {
+		#size-cells = <0x1>;
+		#address-cells = <0x1>;
+		memory-region = <&tb_l46>;
+		qcom,iommu-group = <&tb_l47>;
+		reg = <0x0 0x0 0x0 0x0 0x0>;
+
+		tb_l47: cnss_pci_iommu_group0 {
+			qcom,iommu-faults = "stall-disable", "HUPCF", "non-fatal";
+			qcom,iommu-pagetable = "coherent";
+			qcom,iommu-dma = "fastmap";
+			qcom,iommu-geometry = <0x98000000 0x18010000>;
+			qcom,iommu-dma-addr-pool = <0x98000000 0x18000000>;
+			qcom,iommu-msi-size = <0x1000>;
+		};
+	};
+};
+
+&tlmm {
+
+	cnss_pins {
+
+		tb_l51: cnss_wlan_en_active {
+
+			mux {
+				function = "gpio";
+				pins = "gpio16";
+			};
+
+			config {
+				bias-pull-up;
+				output-high;
+				drive-strength = <0x10>;
+				pins = "gpio16";
+			};
+		};
+
+		tb_l52: cnss_wlan_en_sleep {
+
+			mux {
+				function = "gpio";
+				pins = "gpio16";
+			};
+
+			config {
+				bias-pull-down;
+				output-low;
+				drive-strength = <0x2>;
+				pins = "gpio16";
+			};
+		};
+	};
+};
+
+&reserved_memory {
+
+	tb_l53: cnss_wlan_region {
+		size = <0x0 0x2000000>;
+		alignment = <0x0 0x400000>;
+		reusable;
+		alloc-ranges = <0x0 0x0 0x0 0xffffffff>;
+		compatible = "shared-dma-pool";
+	};
+};
+
+&soc {
+
+	qcom,cnss-kiwi@b0000000 {
+		qcom,pdc_init_table = "{class: wlan_pdc, ss: rf, res: s3c.v, upval: 916}", "{class: wlan_pdc, ss: rf, res: s3c.v, dwnval: 612}", "{class: wlan_pdc, ss: rf, res: s1c.v, upval: 1316}", "{class: wlan_pdc, ss: rf, res: s1c.v, dwnval: 944}", "{class: wlan_pdc, ss: rf, res: s6c.v, upval: 1864}", "{class: wlan_pdc, ss: rf, res: s6c.v, dwnval: 1820}", "{class: wlan_pdc, ss: bb, res: s2c.v, upval: 976}", "{class: wlan_pdc, ss: bb, res: s2c.v, dwnval: 512}", "{class: wlan_pdc, ss: bb, res: s4i.v, upval: 940}", "{class: wlan_pdc, ss: bb, res: s4i.v, dwnval: 420}";
+		qcom,pmu_vreg_map = "VDD095_MX_PMU", "s2c", "VDD095_PMU", "s4i", "VDD_PMU_AON_I", "s3c", "VDD095_PMU_BT", "s3c", "VDD09_PMU_RFA_I", "s3c", "VDD13_PMU_PCIE_I", "s1c", "VDD13_PMU_RFA_I", "s1c", "VDD19_PMU_PCIE_I", "s6c", "VDD19_PMU_RFA_I", "s6c";
+		qcom,vreg_pdc_map = "s3c", "rf", "l15B", "rf", "l3c", "rf", "s1c", "rf", "s6c", "rf", "s2c", "bb", "s4i", "bb";
+		qcom,bus-bw-cfg = <0x0 0x0 0x8ca 0x186a00 0x1d4c 0x186a00 0x7530 0x186a00 0x186a0 0x186a00 0x2ab98 0x626380 0x4c4b4 0x626380 0x8f6ec 0x822080 0x1d4c 0x30d400 0x0 0x0 0x8ca 0x216600 0x1d4c 0x216600 0x7530 0x216600 0x186a0 0x216600 0x2ab98 0x5eec00 0x4c4b4 0x7faf80 0x8f6ec 0xc35000 0x1d4c 0x216600>;
+		qcom,bus-bw-cfg-count = <0x9>;
+		qcom,icc-path-count = <0x2>;
+		interconnect-names = "pcie_to_memnoc", "memnoc_to_ddr";
+		interconnects = <&pcie_noc 0x2f &pcie_noc 0x239 &gem_noc 0x1b &mc_virt 0x200>;
+		qcom,vdd-wlan-rfa2-config = <0x1414a0 0x1414a0 0x0 0x0 0x1>;
+		vdd-wlan-rfa2-supply = <&S1C>;
+		qcom,vdd-wlan-rfa1-config = <0x1c5200 0x1c7140 0x0 0x0 0x1>;
+		vdd-wlan-rfa1-supply = <&S6C>;
+		qcom,vdd-wlan-dig-config = <0xdfa20 0xdfa20 0x0 0x0 0x1>;
+		vdd-wlan-dig-supply = <&S3C>;
+		qcom,vdd-wlan-aon-config = <0xee480 0xee480 0x0 0x0 0x1>;
+		vdd-wlan-aon-supply = <&S2C>;
+		qcom,vdd-wlan-config = <0xe57e0 0xe57e0 0x0 0x0 0x1>;
+		vdd-wlan-supply = <&S4I>;
+		qcom,vdd-wlan-io12-config = <0x124f80 0x124f80 0x0 0x0 0x1>;
+		vdd-wlan-io12-supply = <&L3C>;
+		qcom,vdd-wlan-io-config = <0x1b7740 0x1b7740 0x0 0x0 0x1>;
+		vdd-wlan-io-supply = <&L15B>;
+		qcom,qmp = <&aoss_qmp>;
+		qcom,same-dt-multi-dev;
+		use-pm-domain;
+		cnss-enable-self-recovery;
+		qcom,wlan-cbc-enabled;
+		qcom,wlan-ramdump-dynamic = <0x780000>;
+		qcom,wlan-rc-num = <0x0>;
+		qcom,wlan;
+		pinctrl-1 = <&tb_l52>;
+		pinctrl-0 = <&tb_l51>;
+		pinctrl-names = "wlan_en_active", "wlan_en_sleep";
+		mpm_wake_set_gpios = <0x12 0x13>;
+		qcom,sw-ctrl-gpio = <&tlmm 0x12 0x0>;
+		qcom,bt-en-gpio = <&tlmm 0x11 0x0>;
+		wlan-en-gpio = <&tlmm 0x10 0x0>;
+		supported-ids = <0x1107>;
+		qcom,wlan-sw-ctrl-gpio = <&tlmm 0x13 0x0>;
+		reg-names = "smmu_iova_ipa";
+		reg = <0xb0000000 0x10000>;
+		compatible = "qcom,cnss-kiwi";
+	};
+};
+
+&pcie0_rp {
+	#size-cells = <0x0>;
+	#address-cells = <0x5>;
+
+	cnss_pci0 {
+		#size-cells = <0x1>;
+		#address-cells = <0x1>;
+		memory-region = <&tb_l53>;
+		qcom,iommu-group = <&tb_l54>;
+		reg = <0x0 0x0 0x0 0x0 0x0>;
+
+		tb_l54: cnss_pci_iommu_group0 {
+			qcom,iommu-faults = "stall-disable", "HUPCF", "non-fatal";
+			qcom,iommu-pagetable = "coherent";
+			qcom,iommu-dma = "fastmap";
+			qcom,iommu-geometry = <0x98000000 0x18010000>;
+			qcom,iommu-dma-addr-pool = <0x98000000 0x18000000>;
+			qcom,iommu-msi-size = <0x1000>;
+		};
+	};
+};
