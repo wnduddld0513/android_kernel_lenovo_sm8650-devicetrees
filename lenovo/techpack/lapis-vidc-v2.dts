@@ -1,0 +1,15 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * (C) 2026 The LineageOS Project
+ *
+ * Qualcomm video (v2) component overlay with the TB520FU video resets
+ * (stock 18.5.10.037 dtb).
+ */
+
+#include "../../qcom/video/pineapple-vidc-v2.dts"
+
+&msm_vidc {
+	reset-names = "video_axi_reset", "video_xo_reset", "video_mvs0c_reset", "video_mvs0_reset";
+	resets = <&gcc 0x21>, <&videocc 0x7>, <&videocc 0x2>, <&videocc 0x8>;
+};
+

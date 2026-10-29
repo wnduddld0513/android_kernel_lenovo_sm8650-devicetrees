@@ -1,0 +1,8 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * (C) 2026 The LineageOS Project
+ *
+ * Qualcomm synx component overlay as built into the stock 18.5.10.037 dtb.
+ */
+
+#include "../../qcom/synx/synx/pineapple-synx.dts"

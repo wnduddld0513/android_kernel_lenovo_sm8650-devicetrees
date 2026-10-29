@@ -4,13 +4,23 @@
  *
  * Lenovo changes to the Qualcomm pineapple dtb (stock 18.5.10.037, ROW):
  * region string, ramoops, fingerprint/NFC/uart/vibrator pins, regulators,
- * camera and USB tuning.  Applied last on top of the Qualcomm component
- * overlays.  Nodes and properties that the stock dtb lacks cannot be removed
+ * camera and USB tuning.  It has to be applied after the Qualcomm component
+ * overlays (see techpack/Makefile).  Nodes and properties that the stock dtb lacks cannot be removed
  * by an overlay: see lapis-soc.dtsi, lapis-kiwi-bt.dts and lapis-camera*.dts.
  */
 
 /dts-v1/;
 /plugin/;
+
+/*
+ * Root ids for merge_dtbs.py of the LineageOS kernel.mk: an overlay without
+ * ids is never merged into a base.  These are those of the Qualcomm component
+ * overlays (all four pineapple/pineapplep v1/v2 dtbs, any board).
+ */
+/ {
+	qcom,msm-id = <557 0x10000>, <557 0x20000>, <577 0x10000>, <577 0x20000>;
+	qcom,board-id = <0 0>;
+};
 
 &{/} {
 	region_country = "ROW";
@@ -30,10 +40,6 @@
 	};
 };
 
-&{/soc/bt_kiwi} {
-	qcom,bt-vdd-rfa2-config = <0x1c5200 0x1c7140 0x0 0x1>;
-};
-
 &{/soc} {
 	goodix_fp {
 		status = "okay";
@@ -47,54 +53,6 @@
 
 &{/soc/pinctrl@f000000} {
 	qcom,gpios-reserved = <0x4a 0x28 0x29 0x2a 0x2b>;
-};
-
-&{/soc/pinctrl@f000000/cam_sensor_active_rst0/config} {
-	pins = "gpio11";
-};
-
-&{/soc/pinctrl@f000000/cam_sensor_active_rst0/mux} {
-	pins = "gpio11";
-};
-
-&{/soc/pinctrl@f000000/cam_sensor_active_rst1/config} {
-	pins = "gpio109";
-};
-
-&{/soc/pinctrl@f000000/cam_sensor_active_rst1/mux} {
-	pins = "gpio109";
-};
-
-&{/soc/pinctrl@f000000/cam_sensor_active_rst2/config} {
-	pins = "gpio15";
-};
-
-&{/soc/pinctrl@f000000/cam_sensor_active_rst2/mux} {
-	pins = "gpio15";
-};
-
-&{/soc/pinctrl@f000000/cam_sensor_suspend_rst0/config} {
-	pins = "gpio11";
-};
-
-&{/soc/pinctrl@f000000/cam_sensor_suspend_rst0/mux} {
-	pins = "gpio11";
-};
-
-&{/soc/pinctrl@f000000/cam_sensor_suspend_rst1/config} {
-	pins = "gpio109";
-};
-
-&{/soc/pinctrl@f000000/cam_sensor_suspend_rst1/mux} {
-	pins = "gpio109";
-};
-
-&{/soc/pinctrl@f000000/cam_sensor_suspend_rst2/config} {
-	pins = "gpio15";
-};
-
-&{/soc/pinctrl@f000000/cam_sensor_suspend_rst2/mux} {
-	pins = "gpio15";
 };
 
 &{/soc/pinctrl@f000000} {
@@ -236,10 +194,6 @@
 	};
 };
 
-&{/soc/qcom,bps@ac2c000} {
-	compatible = "qcom,cam-bps880";
-};
-
 &{/soc/qcom,pcie@1c08000} {
 	status = "disabled";
 };
@@ -274,11 +228,6 @@
 		qcom,auto-suspend-disable;
 		status = "disabled";
 	};
-};
-
-&{/soc/qcom,vidc@aa00000} {
-	reset-names = "video_axi_reset", "video_xo_reset", "video_mvs0c_reset", "video_mvs0_reset";
-	resets = <&gcc 0x21>, <&videocc 0x7>, <&videocc 0x2>, <&videocc 0x8>;
 };
 
 &{/soc/rsc@17a00000/drv@2/rpmh-regulator-ldob1} {

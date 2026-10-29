@@ -1,6 +1,0 @@
-# index (position in the stock dtbo.img)  overlay source (relative to qcom/)
-# 36 has no msm-id/board-id and is always applied; 37 is selected by board-id 0x2000b.
-# The other 70 stock entries are Qualcomm reference boards, the kirby QRD (board-id
-# 0x3000b, another Lenovo tablet) and non-SM8650 SoCs: none matches the TB520FU.
-36 ../lenovo/avf-overlay.dts
-37 ../lenovo/lapis-qrd-overlay.dts

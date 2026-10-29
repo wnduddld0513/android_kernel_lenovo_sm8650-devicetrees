@@ -2,24 +2,22 @@
 # (C) 2026 The LineageOS Project
 #
 # Lenovo Yoga Tab Plus (TB520FU, lapis) device trees for the kernel build.
-# The Qualcomm SoC dtbs and the subsystem overlays come from ../qcom (see
-# ../qcom/Makefile); the lapis-pineapple*.dtb here are the same SoC dtbs with
-# the TB520FU differences, and the dtbos are the lapis board, Lenovo, AVF, BT
-# and camera overlays.  lenovo/dtb.list and lenovo/dtbo.list name which
-# overlays make up the vendor_boot dtb and the dtbo.img of the stock image;
-# lenovo/tools/build.sh builds the same sources without a kernel tree.
+# lapis-pineapple*.dtb are the Qualcomm pineapple SoC dtbs with the TB520FU
+# differences (bases for merge_dtbs.py); avf-overlay and lapis-qrd-overlay are
+# the two board dtbos of the stock dtbo.img.  techpack/ holds the component
+# overlays that merge_dtbs.py folds into the bases.
+#
+# BoardConfig:  BOARD_USES_QCOM_MERGE_DTBS_SCRIPT := true
+#               TARGET_MERGE_DTBS_WILDCARD := lapis-pineapple*
+#               TARGET_MERGE_DTBOS_WILDCARD := *-overlay
 
-LAPIS_BASE_DTB += lapis-pineapple.dtb lapis-pineapple-v2.dtb
-LAPIS_APQ_BASE_DTB += lapis-pineapplep.dtb lapis-pineapplep-v2.dtb
+KBUILD_DTC_INCLUDE += $(addprefix $(srctree)/$(src)/../../sm8650-modules/qcom/opensource/, \
+	audio-kernel/include camera-kernel synx-kernel display-drivers/include)
 
-LAPIS_BOARDS += pineapple-lenovo-overlay.dtbo \
-		avf-overlay.dtbo \
-		lapis-qrd-overlay.dtbo \
-		lapis-kiwi-bt.dtbo \
-		lapis-camera.dtbo \
-		lapis-camera-v2.dtbo
+dtb-y += lapis-pineapple.dtb lapis-pineapple-v2.dtb \
+	 lapis-pineapplep.dtb lapis-pineapplep-v2.dtb
+dtbo-y += avf-overlay.dtbo lapis-qrd-overlay.dtbo
 
-dtb-y += $(LAPIS_BOARDS) $(LAPIS_BASE_DTB) $(LAPIS_APQ_BASE_DTB)
-
-always-y	:= $(dtb-y)
+always-y	:= $(dtb-y) $(dtbo-y)
+subdir-y	:= techpack
 clean-files	:= *.dtb *.dtbo

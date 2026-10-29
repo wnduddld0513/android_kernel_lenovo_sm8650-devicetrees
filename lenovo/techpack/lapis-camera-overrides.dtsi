@@ -1,0 +1,93 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * (C) 2026 The LineageOS Project
+ *
+ * TB520FU differences to the Qualcomm pineapple camera overlay (stock
+ * 18.5.10.037 dtb): CCI1 only wires master 0, other sensor reset gpios and
+ * the BPS compatible.
+ */
+
+&cam_cci1 {
+	pctrl-idx-mapping = <CCI_MASTER_0>;
+	pctrl-map-names = "m0";
+	pinctrl-names = "m0_active", "m0_suspend";
+	/delete-property/ pinctrl-2;
+	/delete-property/ pinctrl-3;
+};
+
+&cam_sensor_active_rst0 {
+	config {
+		pins = "gpio11";
+	};
+};
+
+&cam_sensor_active_rst0 {
+	mux {
+		pins = "gpio11";
+	};
+};
+
+&cam_sensor_active_rst1 {
+	config {
+		pins = "gpio109";
+	};
+};
+
+&cam_sensor_active_rst1 {
+	mux {
+		pins = "gpio109";
+	};
+};
+
+&cam_sensor_active_rst2 {
+	config {
+		pins = "gpio15";
+	};
+};
+
+&cam_sensor_active_rst2 {
+	mux {
+		pins = "gpio15";
+	};
+};
+
+&cam_sensor_suspend_rst0 {
+	config {
+		pins = "gpio11";
+	};
+};
+
+&cam_sensor_suspend_rst0 {
+	mux {
+		pins = "gpio11";
+	};
+};
+
+&cam_sensor_suspend_rst1 {
+	config {
+		pins = "gpio109";
+	};
+};
+
+&cam_sensor_suspend_rst1 {
+	mux {
+		pins = "gpio109";
+	};
+};
+
+&cam_sensor_suspend_rst2 {
+	config {
+		pins = "gpio15";
+	};
+};
+
+&cam_sensor_suspend_rst2 {
+	mux {
+		pins = "gpio15";
+	};
+};
+
+&cam_bps {
+	compatible = "qcom,cam-bps880";
+};
+

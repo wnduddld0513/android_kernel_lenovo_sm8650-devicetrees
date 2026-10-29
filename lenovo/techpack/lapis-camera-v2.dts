@@ -1,0 +1,10 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * (C) 2026 The LineageOS Project
+ *
+ * Qualcomm pineapple camera overlay (v2) for the TB520FU with the differences
+ * of lapis-camera-overrides.dtsi.
+ */
+
+#include "../../qcom/camera/pineapple-camera-v2.dts"
+#include "lapis-camera-overrides.dtsi"

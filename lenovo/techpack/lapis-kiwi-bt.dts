@@ -7,11 +7,12 @@
  * removals are made here on the labels of the included Qualcomm source.
  */
 
-#include "../qcom/bt/pineapple-kiwi-bt.dts"
+#include "../../qcom/bt/pineapple-kiwi-bt.dts"
 
 &bluetooth {
 	/delete-property/ qcom,bt-ant-ldo-supply;
 	/delete-property/ qcom,bt-ant-ldo-config;
+	qcom,bt-vdd-rfa2-config = <0x1c5200 0x1c7140 0x0 0x1>;
 };
 
 /delete-node/ &fm_rtc6226;
