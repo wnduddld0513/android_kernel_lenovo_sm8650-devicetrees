@@ -1,0 +1,30 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * (C) 2026 The LineageOS Project
+ *
+ * Android Virtualization Framework defaults (stock dtbo entry 36).
+ */
+
+/dts-v1/;
+/plugin/;
+
+/ {
+	fragment@avf {
+		target-path = "/";
+
+		__overlay__ {
+			avf {
+				guest {
+					common {
+						log = <0x01>;
+						ramdump = <0x00>;
+					};
+
+					microdroid {
+						adb = <0x01>;
+					};
+				};
+			};
+		};
+	};
+};
