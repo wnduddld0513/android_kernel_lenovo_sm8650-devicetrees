@@ -1,0 +1,2 @@
+# name  base dts (relative to qcom/)  component overlays in the order they are applied
+pineapple pineapple.dts audio/pineapple-audio.dts bt/pineapple-kiwi-bt.dts camera/pineapple-camera.dts data/pineapple-ipa.dts display/display/pineapple-sde.dts dsp/pineapple-dsp.dts eva/pineapple-eva.dts graphics/gpu/pineapple-gpu.dts mm-sys/ubwcp-devicetree/pineapple-ubwcp.dts mm/hw_fence/pineapple-hw-fence.dts mmrm/pineapple/pineapple-mmrm.dts mmrm/pineapple/pineapple-mmrm-test.dts synx/synx/pineapple-synx.dts video/pineapple-vidc.dts ../lenovo/pineapple-lenovo-overlay.dts

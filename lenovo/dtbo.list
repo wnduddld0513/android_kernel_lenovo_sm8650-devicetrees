@@ -1,0 +1,4 @@
+# index (position in the stock dtbo.img)  overlay source (relative to qcom/)
+35 ../lenovo/kirby-qrd-overlay.dts
+36 ../lenovo/avf-overlay.dts
+37 ../lenovo/lapis-qrd-overlay.dts
