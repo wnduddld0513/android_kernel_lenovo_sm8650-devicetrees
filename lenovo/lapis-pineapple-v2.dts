@@ -1,0 +1,9 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * (C) 2026 The LineageOS Project
+ *
+ * Base dtb of the TB520FU for pineapple-v2: Qualcomm pineapple-v2.dts plus lapis-soc.dtsi.
+ */
+
+#include "../qcom/pineapple-v2.dts"
+#include "lapis-soc.dtsi"

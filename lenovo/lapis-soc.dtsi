@@ -1,0 +1,31 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * (C) 2026 The LineageOS Project
+ *
+ * Lenovo Yoga Tab Plus (TB520FU, lapis) differences in the SoC base dtb.
+ * The stock 18.5.10.037 dtb has no ramoops_region (Lenovo reserves
+ * ramoops@0xa2000000 in pineapple-lenovo-overlay.dts instead) and no
+ * proxy vote on the ldob12 regulator, and its pcie0/pcie1 nodes carry
+ * device_type = "pci" (LineageOS 3aed48f2 dropped it from the shared tree).  Overlays cannot delete, so the base
+ * dts of every pineapple variant is wrapped here.
+ */
+
+/delete-node/ &ramoops_mem;
+
+&apps_rsc_drv2 {
+	rpmh-regulator-ldob12 {
+		/delete-property/ proxy-supply;
+	};
+};
+
+&L12B {
+	/delete-property/ qcom,proxy-consumer-enable;
+};
+
+&pcie0 {
+	device_type = "pci";
+};
+
+&pcie1 {
+	device_type = "pci";
+};

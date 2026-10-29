@@ -1,0 +1,15 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * (C) 2026 The LineageOS Project
+ *
+ * CCI1 of the TB520FU only wires master 0 (stock 18.5.10.037 dtb): drop the
+ * master 1 pinctrl states of the Qualcomm pineapple camera overlay.
+ */
+
+&cam_cci1 {
+	pctrl-idx-mapping = <CCI_MASTER_0>;
+	pctrl-map-names = "m0";
+	pinctrl-names = "m0_active", "m0_suspend";
+	/delete-property/ pinctrl-2;
+	/delete-property/ pinctrl-3;
+};

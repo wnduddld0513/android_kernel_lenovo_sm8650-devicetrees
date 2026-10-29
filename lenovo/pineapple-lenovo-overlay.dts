@@ -5,8 +5,8 @@
  * Lenovo changes to the Qualcomm pineapple dtb (stock 18.5.10.037, ROW):
  * region string, ramoops, fingerprint/NFC/uart/vibrator pins, regulators,
  * camera and USB tuning.  Applied last on top of the Qualcomm component
- * overlays.  Properties and nodes that the stock dtb lacks are removed in
- * the qcom/ sources instead (an overlay cannot delete).
+ * overlays.  Nodes and properties that the stock dtb lacks cannot be removed
+ * by an overlay: see lapis-soc.dtsi, lapis-kiwi-bt.dts and lapis-camera*.dts.
  */
 
 /dts-v1/;

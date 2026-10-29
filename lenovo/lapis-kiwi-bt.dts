@@ -1,0 +1,17 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * (C) 2026 The LineageOS Project
+ *
+ * Qualcomm pineapple kiwi BT overlay for the TB520FU: no BT antenna LDO and
+ * no FM radio (nq@64).  Overlays cannot delete across fragments, so the
+ * removals are made here on the labels of the included Qualcomm source.
+ */
+
+#include "../qcom/bt/pineapple-kiwi-bt.dts"
+
+&bluetooth {
+	/delete-property/ qcom,bt-ant-ldo-supply;
+	/delete-property/ qcom,bt-ant-ldo-config;
+};
+
+/delete-node/ &fm_rtc6226;
